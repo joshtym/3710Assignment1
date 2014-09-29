@@ -8,8 +8,14 @@ void action();
 void keyboard(unsigned char key, int xPos, int yPos);
 void mouse(int button, int state, int xPos, int yPos);
 void reshape(int width, int height);
+void rotationHelperFunc();
+void changeAxisRotation(double, double, double);
 
 static GLfloat spin = 0.0;
+static bool isRotating = true;
+static GLfloat xAxisRotation = 1.0;
+static GLfloat yAxisRotation = 0.0;
+static GLfloat zAxisRotation = 0.0;
 
 int main(int argc, char **argv)
 {
@@ -44,7 +50,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glPushMatrix();
-	glRotatef(spin, 1.0, 0.0, 0.0);
+	glRotatef(spin, xAxisRotation, yAxisRotation, zAxisRotation);
 	
 	glBegin(GL_LINE_LOOP);
 		glColor3f(1.0, 0.0, 0.0);
@@ -54,10 +60,10 @@ void display()
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.50, 0.00, -1.00);
 		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.75,0.00, -0.75);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.00, 0.00, 0.00);
-		
+		glVertex3f(0.75, 0.00, -0.75);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.50, 0.50, -0.50);
 		glColor3f(1.0, 0.0, 0.0);
@@ -66,34 +72,38 @@ void display()
 		glVertex3f(0.00, 0.00, -1.00);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.00, 0.00, 0.00);
-		
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.75, 0.00, -0.75);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.50, 0.50, -0.50);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.00, 0.00, 0.00);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.75, 0.00, -0.75);
-		
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.50, 0.00, -1.00);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.25, 0.25, -1.00);
 		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.50, 0.50, -0.50);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.75, 0.00, -0.75);
-		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.50, 0.00, -1.00);
-		
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.00, 0.00, -1.00);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.25, 0.25, -1.00);
 		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(0.50, 0.50, -0.50);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(0.75, 0.00, -0.75);
+		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(0.50, 0.00, -1.00);
-		
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(0.50, 0.50, -0.50);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(0.00, 0.00, 0.00);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(0.75, 0.00, -0.75);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.00, 0.00, 0.00);
 		glColor3f(0.0, 1.0, 0.0);
@@ -101,10 +111,10 @@ void display()
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.50, 0.00, 1.00);
 		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.75,0.00, 0.75);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.00, 0.00, 0.00);
-		
+		glVertex3f(0.75, 0.00, 0.75);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.50, 0.50, 0.50);
 		glColor3f(0.0, 1.0, 0.0);
@@ -113,33 +123,35 @@ void display()
 		glVertex3f(0.00, 0.00, 1.00);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.00, 0.00, 0.00);
-		
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.25, 0.25, 1.00);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.50, 0.00, 1.00);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.00, 0.00, 1.00);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.25, 0.25, 1.00);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.50, 0.50, 0.50);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.75, 0.00, 0.75);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.50, 0.00, 1.00);
+	glEnd();
+	
+	glBegin(GL_LINE_LOOP);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.50, 0.50, 0.50);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.00, 0.00, 0.00);
 		glColor3f(0.0, 1.0, 0.0);
 		glVertex3f(0.75, 0.00, 0.75);
-		
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.50, 0.00, 1.00);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.25, 0.25, 1.00);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.50, 0.50, 0.50);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.75, 0.00, 0.75);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.50, 0.00, 1.00);
-		
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.00, 0.00, 1.00);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.25, 0.25, 1.00);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.50, 0.00, 1.00);
 	glEnd();
 	
 	glPopMatrix();
@@ -162,24 +174,31 @@ void keyboard(unsigned char key, int xPos, int yPos)
 	switch(key)
 	{
 		case 27:
+			glutDestroyWindow(1);
 			break;
 		case 82:
+			rotationHelperFunc();
 			break;
 		case 114:
+			rotationHelperFunc();
 			break;
 		case 88:
-			glutIdleFunc(action);
+			changeAxisRotation(1.0, 0.0, 0.0);
 			break;
 		case 120:
-			glutIdleFunc(action);
+			changeAxisRotation(1.0, 0.0, 0.0);
 			break;
 		case 89:
+			changeAxisRotation(0.0, 1.0, 0.0);
 			break;
 		case 121:
+			changeAxisRotation(0.0, 1.0, 0.0);
 			break;
 		case 90:
+			changeAxisRotation(0.0, 0.0, 1.0);
 			break;
 		case 122:
+			changeAxisRotation(0.0, 0.0, 1.0);
 			break;
 		default:
 			break;
@@ -217,4 +236,25 @@ void reshape(int width, int height)
 	 * sets the eye to be at (1.5, 1.5, 1.5) looking at the origin etc.
 	*/
 	gluLookAt(1.5, 1.5, 1.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+}
+
+void rotationHelperFunc()
+{
+	if (isRotating)
+	{
+		glutIdleFunc(NULL);
+		isRotating = false;
+	}
+	else
+	{
+		glutIdleFunc(action);
+		isRotating = true;
+	}
+}
+
+void changeAxisRotation(double xAxis, double yAxis, double zAxis)
+{
+	xAxisRotation = xAxis;
+	yAxisRotation = yAxis;
+	zAxisRotation = zAxis;
 }
